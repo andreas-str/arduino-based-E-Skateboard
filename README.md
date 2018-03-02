@@ -14,12 +14,11 @@ The sk8 controller will parse and filter the receiving number and feed it into t
 
 The code also has external lights support, as well as both skateboard and wii controller battery monitoring capabilities. There is also an accidental trigger protection as well as disconnection protection.
 
-# Small issues with the code #
 
-# sk8 Controller:
+# sk8 Controller Issues:
 The parseInt() function used to parse the int number from the incoming serial port can sometimes slow down the code. This is because of the way parseInt() works, which is to look into the incoming buffer and read any number it find until it reaches a character, in the case of this code, the new line character. For some reason, this process will bug if the small delay in the main code is removed. A better way to read incoming data and then filter just the int number might be a better solution 
 
 The Serial1 used in the code is because I am using the arduino pro micro, which has 2 Serial ports. The default, Serial, is used when working over the USB connection, while Serial1 is the one used for the hardware tx-rx pins. 
 
-# Nunchuck Controller
+# Nunchuck Controller Issues:
 The code to monitor the voltage of the battery of the arduino in the nunchunk, is using the 3.3 voltage of the arduino as reference. If you are powering the arduino directly with a 3.7v lipo battery using the on-board voltage regulator, the voltage output of the regulator will drop below 3.3v while the battery discharges, making the reading inaccurate. If you are using this approach for power, a better way to monitor the battery would be to use the internal 1.1v reference voltage for the ADC, and use a voltage devider to get the battery level (3.3v - 4.2v) down to the 0v - 1.1v range. BE AWARE that this will also affect the reading of the analog input of the joystick, as you will also be limited to a maximum of 1.1v for the lowest point of the joystick.
