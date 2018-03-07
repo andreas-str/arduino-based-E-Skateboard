@@ -18,6 +18,10 @@ int batlevel = 0; // internal battery analog reading
 bool timeToSend = true; //bool to control when to send the battery status to the controller
 unsigned long previousMillis = 0; //variable for a delay without using delay
 const long interval = 10000; //how often to send the battery level back
+float voltageLow = 0;
+float voltageHigh = 0;
+float r1 = 80200.0;
+float r2 = 11800.0;
 
 void setup() {
   esc.attach(escPin); //start the esc output
@@ -52,21 +56,22 @@ void loop() {
     }
   }
   //analog voltage(0-1023) to real voltage (0-5v)
-  float voltage = batlevel * (5.0 / 1023.0);
+  voltageLow = (sensorValue * 4.62) / 1023.00;
+  voltageHigh = voltageLow / (r2/(r1+r2));
   //depending on the voltage, send the apropriate command to the controller
   if (timeToSend == true) {
-    if (voltage >= 4.5) {                   //Battery between 100-70%
-      //Serial1.write(49);
+    if (voltageHigh >= 19.80) {                         //Battery between 100-70%
+      Serial1.write(49);
     }
-    if (voltage < 4.5 && voltage >= 3.9) {  //Battery between 70-40%
-      //Serial1.write(50);
+    if (voltageHigh < 19.80 && voltageHigh >= 18.25) {  //Battery between 70-40%
+      Serial1.write(50);
     }
-    if (voltage < 3.9 && voltage >= 3.3) {  //Battery between 40-10%
-      //Serial1.write(51);
+    if (voltageHigh < 18.25 && voltageHigh >= 17.30) {  //Battery between 40-10%
+      Serial1.write(51);
     }
-    if (voltage < 3.3) {                    //Battery below 10%
-      //Serial1.write(52);
-      //safe = false;
+    if (voltageHigh < 17.30) {                          //Battery below 10%
+      Serial1.write(52);
+      safe = false;
     }
   }
 }
