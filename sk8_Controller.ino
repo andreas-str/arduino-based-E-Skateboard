@@ -17,11 +17,11 @@ int curve = 1100; //curve variable for a variable esc signal input
 int batlevel = 0; // internal battery analog reading
 bool timeToSend = true; //bool to control when to send the battery status to the controller
 unsigned long previousMillis = 0; //variable for a delay without using delay
-const long interval = 10000; //how often to send the battery level back
-float voltageLow = 0;
-float voltageHigh = 0;
-float r1 = 80200.0;
-float r2 = 11800.0;
+const long interval = 12000; //how often to send the battery level back
+float voltageLow = 0.00;
+float voltageHigh = 0.00;
+float r1 = 80200.00;
+float r2 = 11800.00;
 
 void setup() {
   esc.attach(escPin); //start the esc output
@@ -56,8 +56,8 @@ void loop() {
     }
   }
   //analog voltage(0-1023) to real voltage (0-5v)
-  voltageLow = (sensorValue * 4.62) / 1023.00;
-  voltageHigh = voltageLow / (r2/(r1+r2));
+  voltageLow = (sensorValue * 4.62) / 1024.00; //calibrate voltage reference here 
+  voltageHigh = voltageLow / (r2/(r1+r2)); //convert voltage to 0 - <20 v
   //depending on the voltage, send the apropriate command to the controller
   if (timeToSend == true) {
     if (voltageHigh >= 19.80) {                         //Battery between 100-70%
