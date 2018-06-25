@@ -22,3 +22,7 @@ The Serial1 used in the code is because I am using the arduino pro micro, which 
 
 # Nunchuck Controller Issues:
 The code to monitor the voltage of the battery of the arduino in the nunchunk, is using the 3.3 voltage of the arduino as reference. If you are powering the arduino directly with a 3.7v lipo battery using the on-board voltage regulator, the voltage output of the regulator will drop below 3.3v while the battery discharges, making the reading inaccurate. If you are using this approach for power, a better way to monitor the battery would be to use the internal 1.1v reference voltage for the ADC, and use a voltage divider to get the battery level (3.3v - 4.2v) down to the 0v - 1.1v range. BE AWARE that this will also effect the reading of the analog input of the joystick, as you will also be limited to a maximum of 1.1v for the lowest point of the joystick.
+
+!!!Above issue has been resolved because I was bored and decided to modify the hardware so I can implement the above method, but I am leaving this here just as a reminder to the 1 person who will use my code.
+
+
